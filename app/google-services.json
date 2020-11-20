@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "519541058615",
+    "firebase_url": "https://gobble-8b761.firebaseio.com",
+    "project_id": "gobble-8b761",
+    "storage_bucket": "gobble-8b761.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:519541058615:android:64d93315504335959fa3b2",
+        "android_client_info": {
+          "package_name": "com.srm325.gobble"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "519541058615-g93gatuq4n4onuki2q7br6gsp12mepen.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.srm325.gobble",
+            "certificate_hash": "00e28c39e4c51472de4c10f91fef0311970bc09e"
+          }
+        },
+        {
+          "client_id": "519541058615-3s0bbo7i40c5u8r5h7riff1blktcl383.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmk1a3Gn9CXZgiYQwr5d-5wT3jQmflseg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "519541058615-3s0bbo7i40c5u8r5h7riff1blktcl383.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
