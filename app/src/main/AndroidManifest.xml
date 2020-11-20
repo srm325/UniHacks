@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.srm325.gobble">
+    package="com.srm325.navsafe">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <application
-        android:name="com.srm325.gobble.core.MyApplication"
+        android:name="com.srm325.navsafe.core.MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -25,7 +25,7 @@
             android:value="@string/maps_api_key" />
 
         <activity
-            android:name="com.srm325.gobble.ui.features.login.LoginActivity"
+            android:name="com.srm325.navsafe.ui.features.login.LoginActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar.FullScreen"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
@@ -37,7 +37,7 @@
 
         </activity>
         <activity
-            android:name="com.srm325.gobble.MainActivity"
+            android:name="com.srm325.navsafe.MainActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait">
         </activity>
