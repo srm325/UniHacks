@@ -11,6 +11,7 @@ import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.os.Looper
+import android.os.StrictMode
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,11 +29,12 @@ import com.google.android.gms.maps.model.*
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.google.maps.android.data.geojson.GeoJsonLayer
+import com.google.maps.android.PolyUtil
 import com.srm325.navsafe.R
 import com.srm325.navsafe.data.Repository
 import com.srm325.navsafe.data.model.Post
 import kotlinx.android.synthetic.main.map_fragment.*
+import org.json.JSONArray
 import org.json.JSONObject
 import timber.log.Timber
 import java.io.BufferedReader
@@ -86,8 +88,8 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                 if (latLng != null) {
                     source = latLng
                     currentAdminArea = getCityFromLatLng(
-                        activity,
-                        LatLng(location.latitude, location.longitude)
+                            activity,
+                            LatLng(location.latitude, location.longitude)
                     ) as String
                     Timber.e("Admin area$currentAdminArea")
                     for (i in addressList) {
@@ -96,23 +98,23 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                             var address123 = getLocationFromAddress(activity, i) as LatLng
                             Timber.e(address123.toString())
                             mMap.addMarker(
-                                MarkerOptions()
-                                    .position(address123)
-                                    .title("Crime spot")
-                                    .icon(
-                                        BitmapDescriptorFactory.defaultMarker(
-                                            BitmapDescriptorFactory.HUE_RED
-                                        )
-                                    )
+                                    MarkerOptions()
+                                            .position(address123)
+                                            .title("Crime spot")
+                                            .icon(
+                                                    BitmapDescriptorFactory.defaultMarker(
+                                                            BitmapDescriptorFactory.HUE_RED
+                                                    )
+                                            )
 
                             )
                             mMap.addCircle(
-                                CircleOptions()
-                                    .center(address123)
-                                    .radius(100.0)
-                                    .strokeWidth(3F)
-                                    .strokeColor(Color.RED)
-                                    .fillColor(Color.parseColor("#22ff0400"))
+                                    CircleOptions()
+                                            .center(address123)
+                                            .radius(100.0)
+                                            .strokeWidth(3F)
+                                            .strokeColor(Color.RED)
+                                            .fillColor(Color.parseColor("#22ff0400"))
                             )
                         }
                     }
@@ -123,11 +125,15 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
 
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater, container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.map_fragment, container, false)
+//allow strict mode
 
+        //allow strict mode
+        val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
         val fm: FragmentManager = childFragmentManager;
         var mapFragment = fm.findFragmentById(R.id.map) as SupportMapFragment?
         val searchBtn: ImageButton = view.findViewById(R.id.searchbutton)
@@ -139,14 +145,14 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                     Timber.e(address12.toString())
                     destination=address12
                     myMarker = mMap.addMarker(
-                        MarkerOptions()
-                            .position(address12)
-                            .title(searchbox.text.toString())
-                            .icon(
-                                BitmapDescriptorFactory.defaultMarker(
-                                    BitmapDescriptorFactory.HUE_GREEN
-                                )
-                            )
+                            MarkerOptions()
+                                    .position(address12)
+                                    .title(searchbox.text.toString())
+                                    .icon(
+                                            BitmapDescriptorFactory.defaultMarker(
+                                                    BitmapDescriptorFactory.HUE_GREEN
+                                            )
+                                    )
 
                     )
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address12, 15F))
@@ -210,16 +216,16 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (context?.let {
                         ContextCompat.checkSelfPermission(
-                            it,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                                it,
+                                Manifest.permission.ACCESS_FINE_LOCATION
                         )
                     } == PackageManager.PERMISSION_GRANTED
             ) {
                 //Location Permission already granted
                 mFusedLocationClient?.requestLocationUpdates(
-                    mLocationRequest,
-                    mLocationCallback,
-                    Looper.myLooper()
+                        mLocationRequest,
+                        mLocationCallback,
+                        Looper.myLooper()
                 )
                 mMap.isMyLocationEnabled = true
             } else {
@@ -228,9 +234,9 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
             }
         } else {
             mFusedLocationClient?.requestLocationUpdates(
-                mLocationRequest,
-                mLocationCallback,
-                Looper.myLooper()
+                    mLocationRequest,
+                    mLocationCallback,
+                    Looper.myLooper()
             )
             mMap.isMyLocationEnabled = true
         }
@@ -258,16 +264,16 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     private fun checkLocationPermission() {
         if (activity?.let {
                     ActivityCompat.checkSelfPermission(
-                        it,
-                        Manifest.permission.ACCESS_FINE_LOCATION
+                            it,
+                            Manifest.permission.ACCESS_FINE_LOCATION
                     )
                 } != PackageManager.PERMISSION_GRANTED
         ) {
             // Should we show an explanation?
             if (activity?.let {
                         ActivityCompat.shouldShowRequestPermissionRationale(
-                            it,
-                            Manifest.permission.ACCESS_FINE_LOCATION
+                                it,
+                                Manifest.permission.ACCESS_FINE_LOCATION
                         )
                     }!!
             ) {
@@ -279,14 +285,14 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                             .setTitle("Location Permission Needed")
                             .setMessage("This app needs the Location permission, please accept to use location functionality")
                             .setPositiveButton(
-                                "OK"
+                                    "OK"
                             ) { _, _ ->
                                 //Prompt the user once explanation has been shown
                                 activity?.let { it1 ->
                                     ActivityCompat.requestPermissions(
-                                        it1,
-                                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                                        MY_PERMISSIONS_REQUEST_LOCATION
+                                            it1,
+                                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                                            MY_PERMISSIONS_REQUEST_LOCATION
                                     )
                                 }
                             }
@@ -299,17 +305,17 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                 // No explanation needed, we can request the permission.
                 activity?.let {
                     ActivityCompat.requestPermissions(
-                        it,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                        MY_PERMISSIONS_REQUEST_LOCATION
+                            it,
+                            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                            MY_PERMISSIONS_REQUEST_LOCATION
                     )
                 }
             }
         }
     }
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>, grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<String>, grantResults: IntArray
     ) {
         when (requestCode) {
             MY_PERMISSIONS_REQUEST_LOCATION -> {
@@ -319,17 +325,17 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                     // permission was granted, yay! Do the
                     // location-related task you need to do.
                     if (activity?.let {
-                            ContextCompat.checkSelfPermission(
-                                it,
-                                Manifest.permission.ACCESS_FINE_LOCATION
-                            )
-                        } == PackageManager.PERMISSION_GRANTED
+                                ContextCompat.checkSelfPermission(
+                                        it,
+                                        Manifest.permission.ACCESS_FINE_LOCATION
+                                )
+                            } == PackageManager.PERMISSION_GRANTED
                     ) {
 
                         mFusedLocationClient?.requestLocationUpdates(
-                            mLocationRequest,
-                            mLocationCallback,
-                            Looper.myLooper()
+                                mLocationRequest,
+                                mLocationCallback,
+                                Looper.myLooper()
                         )
                         mMap.isMyLocationEnabled = true
                     }
@@ -363,44 +369,75 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
         }
         return p1
     }
-    fun getUrl(origin: LatLng, dest: LatLng): String? {
-
-        val str_origin = "origin=" + origin.latitude.toString() + "," + origin.longitude
-        val str_dest = "destination=" + dest.latitude.toString() + "," + dest.longitude
+    private fun getUrl(origin: LatLng, dest: LatLng): String? {
+        val strorigin = "origin=" + origin.latitude.toString() + "," + origin.longitude
+        val strdest = "destination=" + dest.latitude.toString() + "," + dest.longitude
         val sensor = "sensor=false"
-        val parameters = "$str_origin&$str_dest&$sensor"
+        val mode = "mode=driving"
+        val parameters = "$strorigin&$strdest&$sensor&$mode"
         val output = "json"
         val API_KEY: String = "AIzaSyDMNds7jkm7x5t6YixsjDTz-_iywFW9uqY"
         return "https://maps.googleapis.com/maps/api/directions/$output?$parameters&key=$API_KEY"
+/*HERE
+        val str_origin = "origin=" + origin.latitude.toString() + "%2C" + origin.longitude
+        val str_dest = "destination=" + dest.latitude.toString() + "%2c" + dest.longitude
+        val transportmode = "transportMode=car"
+        val parameters = "$str_origin&$transportmode&$str_dest"
+        val output = "return=polyline"
+        val API_KEY: String = "-2tUjsluW_sYRxJK8MewPG0ug4AfXEUC7I1aPAd5RV4"
+        return "https://router.hereapi.com/v8/routes?$parameters&$output&apikey=$API_KEY"
+
+ */
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
         if (marker.equals(myMarker)) {
 
             val data: String
-                var inputStream: InputStream? = null
-                var connection: HttpURLConnection? = null
-                    val directionUrl = URL(getUrl(source, destination))
-                    connection = directionUrl.openConnection() as HttpURLConnection
-                    connection.connect()
-                    inputStream = connection.getInputStream()
-                    val bufferedReader = BufferedReader(InputStreamReader(inputStream))
-                    val stringBuffer = StringBuffer()
-                    var line: String? = ""
-                    while (bufferedReader.readLine().also { line = it } != null) {
-                        stringBuffer.append(line)
-                    }
-                    data = stringBuffer.toString()
-                    bufferedReader.close()
+            var inputStream: InputStream? = null
+            var connection: HttpURLConnection? = null
+            val directionUrl = URL(getUrl(source, destination))
+            Timber.e(directionUrl.toString())
+            connection = directionUrl.openConnection() as HttpURLConnection
+            connection.connect()
+            inputStream = connection.inputStream
+            val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            val stringBuffer = StringBuffer()
+            var line: String? = ""
+            while (bufferedReader.readLine().also { line = it } != null) {
+                stringBuffer.append(line)
+            }
+            data = stringBuffer.toString()
+            bufferedReader.close()
 
-                    inputStream.close()
-                    connection.disconnect()
+            inputStream.close()
+            connection.disconnect()
+            val doc = JSONObject(data)
+            /*HERE APi
+            val routes = doc.getJSONArray("routes")
+            val sections = routes.getJSONObject(0).getJSONArray("sections")
+            val polylin = sections.getJSONObject(0).getString("polyline")
+
+             */
+            //Directions API
+            val routes = doc.getJSONArray("routes")
+            val sections = routes.getJSONObject(0).getJSONObject("overview_polyline")
+            val polylin = sections.getString("points")
 
 
-            val geoJsonData= JSONObject(data)
-            val layer = GeoJsonLayer(mMap, geoJsonData)
+            Timber.e(polylin.toString())
+            val decoded: List<LatLng> = PolyUtil.decode(polylin)
+            Timber.e(decoded.toString())
+            var latLNG  = source
+            for (e in decoded) {
+                Timber.e(e.toString())
+                mMap.addPolyline(PolylineOptions()
+                        .add(latLNG, e)
+                        .width(25F)
+                        .color(Color.RED))
+                latLNG = e
+            }
 
-            layer.addLayerToMap()
         }
         return true
     }
@@ -426,7 +463,6 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
         }
         return p1
     }
-
 
 }
 

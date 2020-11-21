@@ -23,6 +23,6 @@
     <fragment
         android:id="@+id/chatListFragment"
         android:name="com.srm325.navsafe.ui.features.map.ChatListFragment"
-        android:label="Thanksgiving dinners near me"
+        android:label="Navigate Safely"
         tools:layout="@layout/map_fragment" />
 </navigation>
