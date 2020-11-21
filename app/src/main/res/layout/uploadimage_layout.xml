@@ -28,6 +28,29 @@
         app:layout_constraintBottom_toBottomOf="@+id/uploadBtn"
         app:layout_constraintEnd_toStartOf="@+id/uploadBtn"
         app:layout_constraintTop_toTopOf="@+id/uploadBtn"/>
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/reportswitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:layout_marginEnd="5dp"
+        app:layout_constraintBottom_toBottomOf="@+id/choose_image"
+        app:layout_constraintEnd_toStartOf="@+id/choose_image"
+        app:layout_constraintTop_toTopOf="@+id/choose_image"/>
+
+    <TextView
+        android:id="@+id/ReportStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:text="@string/police_notified"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/reportswitch"
+        app:layout_constraintEnd_toStartOf="@+id/reportswitch"
+        app:layout_constraintTop_toTopOf="@+id/reportswitch" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/preview_container"

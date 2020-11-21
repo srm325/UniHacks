@@ -10,7 +10,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Switch
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.SwitchCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.srm325.navsafe.R
@@ -45,7 +48,14 @@ class UploadImageFragment : Fragment() {
     ): View? {
         val view: View = inflater.inflate(R.layout.uploadimage_layout, container, false)
         val uploadBtn: MaterialButton = view.findViewById(R.id.uploadBtn)
+        val reportStatus: TextView = view.findViewById(R.id.ReportStatus)
         img = view.findViewById(R.id.image_upload)
+        val statusswitch: SwitchCompat = view.findViewById(R.id.reportswitch)
+
+        statusswitch.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) reportStatus.text = "Police notified" else reportStatus.text = "Police not notified"
+
+        }
         return view
     }
 
@@ -63,6 +73,7 @@ class UploadImageFragment : Fragment() {
                 ), GET_FROM_GALLERY
             )
         }
+
 
         uploadBtn.setOnClickListener {
 

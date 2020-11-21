@@ -37,4 +37,6 @@
     <string name="Dinners_near_me">Near me</string>
     <string name="maps_api_key">AIzaSyBshqZH4cNdr0N9vxmwWibwZ0iE4pHY5bM</string>
     <string name="tell_us_the_address">Where is it? (No commas in address!)</string>
+    <string name="search">Search</string>
+    <string name="police_notified">Police notified</string>
 </resources>
