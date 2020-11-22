@@ -47,8 +47,6 @@ import java.net.URL
 private lateinit var mMap: GoogleMap
 private val repository = Repository()
 private lateinit var viewModel: MapViewModel
-val addressList: ArrayList<String> = ArrayList<String>(listOf(""))
-val incidentList: ArrayList<String> = ArrayList<String>(listOf(""))
 lateinit var mLocationRequest: LocationRequest
 var mLastLocation: Location? = null
 lateinit var myMarker: Marker
@@ -92,31 +90,69 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                             LatLng(location.latitude, location.longitude)
                     ) as String
                     Timber.e("Admin area$currentAdminArea")
-                    for (i in addressList) {
-                        var county = getCityFromAddress(activity, i) as String
-                        if (county == currentAdminArea) {
-                            var address123 = getLocationFromAddress(activity, i) as LatLng
-                            Timber.e(address123.toString())
-                            mMap.addMarker(
-                                    MarkerOptions()
-                                            .position(address123)
-                                            .title("Crime spot")
-                                            .icon(
-                                                    BitmapDescriptorFactory.defaultMarker(
-                                                            BitmapDescriptorFactory.HUE_RED
-                                                    )
-                                            )
+                    val user = Firebase.auth.currentUser
+                    val postList:MutableList<Post> = mutableListOf()
+                    val db = Firebase.firestore
+                    mFusedLocationClient = activity?.let { LocationServices.getFusedLocationProviderClient(it) }
+                    db.collection("posts")
+                            .get()
+                            .addOnSuccessListener { result ->
+                                for (document in result) {
+                                    val post = document.toObject(Post::class.java)
+                                    val county = getCityFromAddress(activity, post.address) as String
+                                    if (county == currentAdminArea) {
+                                        val tsLong = System.currentTimeMillis() / 1000
+                                        val ts = tsLong.toInt()
+                                        val posttime = post.id.toInt()
+                                        val ts1 = ts - posttime
+                                        val i = 1
+                                        if (ts1 < 7200) {
+                                            val address123 = getLocationFromAddress(activity, post.address) as LatLng
+                                            Timber.e(address123.toString())
+                                            mMap.addMarker(
+                                                    MarkerOptions()
+                                                            .position(address123)
+                                                            .title(post.description)
+                                                            .icon(
+                                                                    BitmapDescriptorFactory.defaultMarker(
+                                                                            BitmapDescriptorFactory.HUE_RED
+                                                                    )
+                                                            )
 
-                            )
-                            mMap.addCircle(
-                                    CircleOptions()
-                                            .center(address123)
-                                            .radius(100.0)
-                                            .strokeWidth(3F)
-                                            .strokeColor(Color.RED)
-                                            .fillColor(Color.parseColor("#22ff0400"))
-                            )
-                        }
+                                            )
+                                            mMap.addCircle(
+                                                    CircleOptions()
+                                                            .center(address123)
+                                                            .radius(100.0)
+                                                            .strokeWidth(3F)
+                                                            .strokeColor(Color.RED)
+                                                            .fillColor(Color.parseColor("#22ff0400"))
+                                            )
+                                        } else{
+                                            val address123 = getLocationFromAddress(activity, post.address) as LatLng
+                                            Timber.e(address123.toString())
+                                            mMap.addMarker(
+                                                    MarkerOptions()
+                                                            .position(address123)
+                                                            .title(post.description)
+                                                            .icon(
+                                                                    BitmapDescriptorFactory.defaultMarker(
+                                                                            BitmapDescriptorFactory.HUE_YELLOW
+                                                                    )
+                                                            )
+
+                                            )
+                                            mMap.addCircle(
+                                                    CircleOptions()
+                                                            .center(address123)
+                                                            .radius(100.0)
+                                                            .strokeWidth(3F)
+                                                            .strokeColor(Color.RED)
+                                                            .fillColor(Color.parseColor("#22fcb000"))
+                                            )
+                                        }
+                                    }
+                            }
                     }
                 }
             }
@@ -162,25 +198,6 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
 
                 }
         }
-
-        val user = Firebase.auth.currentUser
-        val postList:MutableList<Post> = mutableListOf()
-        val db = Firebase.firestore
-        mFusedLocationClient = activity?.let { LocationServices.getFusedLocationProviderClient(it) }
-        db.collection("posts")
-                .get()
-                .addOnSuccessListener { result ->
-                    for (document in result) {
-                        val post = document.toObject(Post::class.java)
-                        if (post.address != null) {
-                            addressList.add(post.address)
-                            incidentList.add(post.description)
-                        }
-                    }
-                }
-        addressList.removeAt(0)
-        incidentList.removeAt(0)
-        Timber.e(addressList.toString())
 
 
         if (mapFragment == null) {
