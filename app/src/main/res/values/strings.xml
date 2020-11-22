@@ -39,4 +39,5 @@
     <string name="tell_us_the_address">Where is it? (No commas in address!)</string>
     <string name="search">Search</string>
     <string name="police_notified">Police notified</string>
+    <string name="channel_description">noti_des</string>
 </resources>

@@ -99,7 +99,6 @@ class UploadImageFragment : Fragment() {
                         val filename = "$currentTime.jpg"
                         val imagesRef = storageRef.child("images/$filename")
                         val uploadTask = imagesRef.putBytes(data)
-
                         val tsLong = System.currentTimeMillis() / 1000
                         val ts = tsLong.toString()
                         val urlTask = uploadTask.continueWithTask {
