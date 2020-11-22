@@ -433,8 +433,8 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                 Timber.e(e.toString())
                 mMap.addPolyline(PolylineOptions()
                         .add(latLNG, e)
-                        .width(25F)
-                        .color(Color.RED))
+                        .width(10F)
+                        .color(Color.BLUE))
                 latLNG = e
             }
 
