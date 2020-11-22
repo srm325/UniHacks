@@ -93,7 +93,6 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                     val user = Firebase.auth.currentUser
                     val postList:MutableList<Post> = mutableListOf()
                     val db = Firebase.firestore
-                    mFusedLocationClient = activity?.let { LocationServices.getFusedLocationProviderClient(it) }
                     db.collection("posts")
                             .get()
                             .addOnSuccessListener { result ->
@@ -105,6 +104,8 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                                         val ts = tsLong.toInt()
                                         val posttime = post.id.toInt()
                                         val ts1 = ts - posttime
+                                        Timber.e(ts.toString())
+                                        Timber.e(posttime.toString())
                                         val i = 1
                                         if (ts1 < 7200) {
                                             val address123 = getLocationFromAddress(activity, post.address) as LatLng
@@ -147,7 +148,7 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
                                                             .center(address123)
                                                             .radius(100.0)
                                                             .strokeWidth(3F)
-                                                            .strokeColor(Color.RED)
+                                                            .strokeColor(Color.YELLOW)
                                                             .fillColor(Color.parseColor("#22fcb000"))
                                             )
                                         }
@@ -166,7 +167,7 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     ): View? {
         val view: View = inflater.inflate(R.layout.map_fragment, container, false)
 //allow strict mode
-
+        mFusedLocationClient = activity?.let { LocationServices.getFusedLocationProviderClient(it) }
         //allow strict mode
         val policy: StrictMode.ThreadPolicy = StrictMode.ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
@@ -175,9 +176,10 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
         val searchBtn: ImageButton = view.findViewById(R.id.searchbutton)
 
             searchBtn.setOnClickListener {
-                if (searchbox != null){
+                val msg: String = searchbox.text.toString()
+                if (msg.trim().length>0){
                     mMap.clear()
-                    val address12 = getLocationFromAddress(activity, searchbox.text.toString()) as LatLng
+                    val address12 = getLocationFromAddress(activity, msg) as LatLng
                     Timber.e(address12.toString())
                     destination=address12
                     myMarker = mMap.addMarker(
@@ -192,10 +194,8 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
 
                     )
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(address12, 15F))
-                    searchbox.text = null
-
+                    searchbox.text?.clear()
             } else {
-
                 }
         }
 

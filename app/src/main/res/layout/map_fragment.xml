@@ -36,6 +36,7 @@
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:background="#FFFFFF"
+            android:text=""
             android:hint="@string/search"
             android:textSize="18sp" />
 
