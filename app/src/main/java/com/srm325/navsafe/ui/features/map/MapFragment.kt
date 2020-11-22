@@ -391,12 +391,11 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     }
 
     override fun onMarkerClick(marker: Marker): Boolean {
-        if (marker.equals(myMarker)) {
 
             val data: String
             var inputStream: InputStream? = null
             var connection: HttpURLConnection? = null
-            val directionUrl = URL(getUrl(source, destination))
+            val directionUrl = URL(getUrl(source, marker.position))
             Timber.e(directionUrl.toString())
             connection = directionUrl.openConnection() as HttpURLConnection
             connection.connect()
@@ -432,11 +431,10 @@ class ChatListFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
             for (e in decoded) {
                 Timber.e(e.toString())
                 mMap.addPolyline(PolylineOptions()
-                        .add(latLNG, e)
-                        .width(10F)
-                        .color(Color.BLUE))
+                    .add(latLNG, e)
+                    .width(10F)
+                    .color(Color.BLUE))
                 latLNG = e
-            }
 
         }
         return true
